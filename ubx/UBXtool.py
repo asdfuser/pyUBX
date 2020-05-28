@@ -187,9 +187,13 @@ def ubxtool_main():
         '-d', '--debug', dest='debug', action='store_true',
         help='Turn on debug mode'
         )
+    parser.add_argument(
+        dest='device',
+        help='Serial device'
+        )
     args = parser.parse_args()
 
-    ser = serial.Serial('/dev/ttyAMA0', 9600, timeout=None)
+    ser = serial.Serial(args.device, 9600, timeout=None)
     debug = (os.environ.get("DEBUG") is not None) or args.debug
 
     manager = Manager(ser, debug=debug)
@@ -220,4 +224,4 @@ def ubxtool_main():
     sys.exit(1)
 
 if __name__ == '__main__':
-    main()
+    ubxtool_main()
