@@ -12,6 +12,9 @@ import datetime
 from ubx.UBXManager import UBXManager
 from ubx.FSM import *
 
+@FSM_Get(UBX.MON.HW)
+class FSM_HW_Get:
+    pass
 
 @FSM_Get(UBX.MON.VER)
 class FSM_VER_Get:
@@ -124,6 +127,11 @@ class Manager(UBXManager):
         with self._lock:
             self._fsm = FSM_VER_Get()
         self.send(msg)
+    def HW_GET(self):
+        msg = UBX.MON.HW.Get().serialize()
+        with self._lock:
+            self._fsm = FSM_HW_Get()
+        self.send(msg)
     def GNSS_GET(self):
         msg = UBX.CFG.GNSS.Get().serialize()
         with self._lock:
@@ -158,6 +166,10 @@ def ubxtool_main():
     parser.add_argument(
         '--VER-GET', dest='VER_GET', action='store_true',
         help='Get the version string'
+        )
+    parser.add_argument(
+        '--HW-GET', dest='HW_GET', action='store_true',
+        help='Get HW information'
         )
     parser.add_argument(
         '--GNSS-GET', dest='GNSS_GET', action='store_true',
